@@ -223,11 +223,6 @@ app.post('/generate', async (req, res) => {
   
   //Log the received request body for debugging
   console.log('Request body:', req.body);
-  // Test
-  openai.chat.completions.create({
-      model: model,
-      messages: messages
-  }).then(response => console.log(response)).catch(console.log);
     
   if (!apikey) {
     return res.status(400).json({ error: 'API key is required' });
@@ -258,10 +253,16 @@ app.post('/generate', async (req, res) => {
 
           //Send webhook notifications
           sendWebhookNotification({ apikey, prompt, model, stream, images, raw, timestamp: new Date() });
-
-          res.json(response.data);
-        })
-        .catch(error => {
+          openai.chat.completions.create({
+            model: model,
+            messages: messages
+          }).then(response1 => response1.json()).then(json => {
+            res.json(json);
+          }).catch(error => {
+            console.error('Error making request to Ollama API:', error.message);
+            res.status(500).json({ error: 'Error making request to Ollama API' });
+          });
+        }).catch(error => {
           console.error('Error making request to Ollama API:', error.message);
           res.status(500).json({ error: 'Error making request to Ollama API' });
         });
