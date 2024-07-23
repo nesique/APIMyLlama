@@ -219,11 +219,16 @@ app.get('/health', (req, res) => {
 
 //Route for making a request to the Ollama API
 app.post('/generate', async (req, res) => {
-  const { apikey } = req.body;
+  const { apikey, model, messages } = req.body;
   
   //Log the received request body for debugging
   console.log('Request body:', req.body);
-
+  // Test
+  openai.chat.completions.create({
+      model: model,
+      messages: messages
+  }).then(response => console.log(response)).catch(console.log);
+    
   if (!apikey) {
     return res.status(400).json({ error: 'API key is required' });
   }
