@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();
 const { Configuration, OpenAIApi } = require('openai');
 const configuration = new Configuration({
     apiKey: 'ollama',
-    baseURL: 'http://localhost:11434/v1/'
+    basePath: 'http://localhost:11434/v1/'
 });
 const openai = new OpenAIApi(configuration);
 const fs = require('fs');
