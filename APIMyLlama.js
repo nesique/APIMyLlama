@@ -213,8 +213,8 @@ app.get('/health', (req, res) => {
 
 //Route for making a request to the Ollama API
 app.post('/generate', async (req, res) => {
-  const { apikey, prompt, model, stream, images, raw } = req.body;
-
+  const { apikey } = req.body;
+  
   //Log the received request body for debugging
   console.log('Request body:', req.body);
 
@@ -238,7 +238,7 @@ app.post('/generate', async (req, res) => {
       const OLLAMA_API_URL = `http://localhost:${ollamaPort}/api/generate`;
 
       //Make request to Ollama if key is valid.
-      axios.post(OLLAMA_API_URL, { model, prompt, stream, images, raw })
+      axios.post(OLLAMA_API_URL, req.body)
         .then(response => {
           //Log usage in apiUsage table
           db.run('INSERT INTO apiUsage (key) VALUES (?)', [apikey], (err) => {
